@@ -349,6 +349,7 @@ python manage.py startapp books
   {% extends "base.html" %}
   ...
   {% block body %}
+
     <table width="40%" border="0">
      ...
     </table>
