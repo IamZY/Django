@@ -1,0 +1,11 @@
+#footer,#header {
+    text-align: center;
+}
+
+td.label {
+    text-align: right;
+}
+
+.error{
+    color: red;
+}

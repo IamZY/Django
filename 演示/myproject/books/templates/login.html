@@ -1,0 +1,49 @@
+<!doctype html>
+{% load static %}
+<html>
+<head>
+<meta charset="utf-8">
+<title>图书管理系统-用户登录</title>
+<link rel="stylesheet" type="text/css" href="{% static 'css/book.css' %}">
+</head>
+
+<body>
+<!-- 页面头部信息 -->
+<div id="header">
+    <img src="{% static 'images/book_img2.jpg' %}" width="20px" height="20px">
+    用户登录
+    <hr/>
+</div>
+<!-- 页面内容信息 -->
+<form action="/books/login/" method="POST">
+  {% csrf_token %}
+  <div id="content">
+    <table width="40%" border="0">
+      <tbody>
+        <tr>
+          <td>用户ID：</td>
+          <td><input type="text" name = "userid"/></td>
+        </tr>
+        <tr>
+          <td>密码：</td>
+          <td><input type="password" name = "userpwd"/></td>
+        </tr>
+        <tr align="center">
+          <td colspan="2">
+            <input type="submit" value="确定">
+            <input type="reset" value="取消">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</form>
+
+<!-- 页面底部信息 -->
+<div id="footer">
+  <hr/>
+  Copyright © 智捷课堂 2008-2018. All Rights Reserved 
+</div>
+
+</body>
+</html>
