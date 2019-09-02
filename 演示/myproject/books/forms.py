@@ -13,4 +13,7 @@ class RegistrationForm(forms.Form):
         if password1 and password2 and password1 != password2:
             raise forms.ValidationError("两次输入的密码不匹配")
         return password2
-    
+
+
+class UploadFileForm(forms.Form):
+    file = forms.FileField()

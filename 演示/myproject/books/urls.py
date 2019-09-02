@@ -13,6 +13,7 @@ urlpatterns = [
   path("register/",views.RegisrationFormView.as_view(),name = "register_view"),
   path("list/",views.UserListView.as_view(),name = "userList"),
   path("del/<str:pk>",views.UserDeleteView.as_view(),name = "delete_user"),
-  path("detail/<str:pk>",views.UserDetailView.as_view(),name="detail_view")
+  path("detail/<str:pk>",views.UserDetailView.as_view(),name="detail_view"),
+  path("upload/",views.upload,name = "upload"),
   # path("hello/",views.hello,name = "hello")
 ]

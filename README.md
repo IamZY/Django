@@ -1015,6 +1015,57 @@ Django还提供了通用视图类，通用视图类可以与数据库模型绑�
 
 ## 文件上传
 
++ views.py
+
+  ```python
+  def upload(request):
+      if request.method == "POST":
+          form = UploadFileForm(request.POST,request.FILES)
+          if form.is_valid():
+              handle_uploaded_file(request.FILES["file"])
+              return HttpResponse("<h5>文件上传成功</h5>")
+      else:
+          form = UploadFileForm()
+  
+      return render(request,"upload.html",{"form":form})
+  
+  
+  def handle_uploaded_file(f):
+      path = "upload/" + f.name
+      with open(path,"wb+") as destination:
+          for chunk in f.chunks():
+              destination.write(chunk)
+  ```
+
++ forms.py
+
+  ```python
+  class UploadFileForm(forms.Form):
+      file = forms.FileField()
+  ```
+
++ upload.html
+
+  ```python
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <title>上传文件</title>
+  </head>
+  <body>
+      <form action="/books/upload/" method="POST"
+            enctype="multipart/form-data">
+          {% csrf_token %}
+        <input type="file" name="file"><br><br>
+        <input type="submit" name="开始上传">
+      </form>
+  </body>
+  </html>
+  ```
+
+## 发送邮件
+
 
 
 

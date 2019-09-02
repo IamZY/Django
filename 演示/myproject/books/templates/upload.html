@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>上传文件</title>
+</head>
+<body>
+    <form action="/books/upload/" method="POST"
+          enctype="multipart/form-data">
+        {% csrf_token %}
+      <input type="file" name="file"><br><br>
+      <input type="submit" name="开始上传">
+    </form>
+</body>
+</html>

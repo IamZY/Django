@@ -4,7 +4,7 @@ from django.views import View
 from django.views.generic import RedirectView,TemplateView,ListView,DetailView
 from django.views.generic.edit import FormView,DeleteView
 import datetime
-from .forms import RegistrationForm
+from .forms import RegistrationForm,UploadFileForm
 from .models import User
 from django.urls import reverse_lazy
 
@@ -70,6 +70,23 @@ class UserDeleteView(DeleteView):
     model = User
     success_url = reverse_lazy("userList")
 
+def upload(request):
+    if request.method == "POST":
+        form = UploadFileForm(request.POST,request.FILES)
+        if form.is_valid():
+            handle_uploaded_file(request.FILES["file"])
+            return HttpResponse("<h5>文件上传成功</h5>")
+    else:
+        form = UploadFileForm()
+
+    return render(request,"upload.html",{"form":form})
+
+
+def handle_uploaded_file(f):
+    path = "upload/" + f.name
+    with open(path,"wb+") as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
 # def show_book_info1(request):
 #     context = {"book_name":"abc","author":"123"}
 #     return render(request,"book.html",context)
