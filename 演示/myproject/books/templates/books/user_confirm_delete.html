@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}删除注册{% endblock %}
+{% block header %}删除注册{% endblock %}
+
+{% block body %}
+
+<p>你确认删除用户：{{ user.name }}</p>
+<form action="" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Yes, delete.">
+    <input type="button" value="No" onclick="window.history.go(-1)">
+</form>
+{% endblock %}

@@ -645,8 +645,375 @@ clean_开头的方法是验证方法，更加复杂的验证，需要在该方�
 4、显示验证错误信息
 5、防止CSRF攻击
 
+## 数据模型
 
+三、定义数据模型
++ 创建用户模型
 
+```python
+class User(models.Model):
+    name = models.CharField(primary_key=True, max_length=100)
+    password = models.CharField(max_length=100)
+    email = models.EmailField(max_length=50, null=True)
+    birthday = models.DateField(null=True)
+```
+
+```python
+# 定义表的元数据
+class Meta:
+    db_table = 'users'  # 定义表名
+    ordering = ['name']  # 设置排序字段
+```
+
++ 自定义模型继承django.db.models.Model类。
++ 字段类型：
+  AutoField：自增长字段。
+  CharField：可以指定最大值和最小值的字符字段。
+  TextField：字符串字段。
+  DateField：日期字段。
+  DateTimeField：日期时间字段。
+  TimeField：时间字段。
+  EmailField：email字段。
+  IntegerField：整数字段。
+  DecimalField：十进制数字段。
+  FloatField：浮点数字段。
+  ImageField：图片字段。
+  https://docs.djangoproject.com/en/2.1/ref/models/fields/#field-types
+
++ 字段可选项：
+  null：设置是否字段可以为null。
+  blank：设置是否字段可以为空白。
+  default：设置默认值。
+  primary_key：设置主键。
+  unique：设置为候选键。
+  https://docs.djangoproject.com/en/2.1/ref/models/fields/#field-options
+
++ 表的元数据类(Meta)
+  在表中定义元数据类Meta，它是一个嵌套类。元数据类Meta的属性：
+  db_table：指定表名。
+  ordering：设置排序字段。
+  abstract：如果设置为True，说明该模型是抽象的，系统不会生成对应的表，它只能作为父类使用。
+
++ 同步数据库
+  模型修改之后，需要执行如下指令：
+
+  > python manger.py makemigrations 
+  > python manager.py migrate
+  > makemigrations：负责生成数据库迁移计划，生成迁移执行文件。
+  > migrate：负责执行或取消数据库迁移。
+
+### 数据的CRUD操作
+
+CRUD就是数据插入（Create）、删除（Delete）、修改（Update）和查询（Read）
+测试CRUD操作可以使用manage.py shell命令。
+
++ 查询所有
+  使用User.objects.all()方法，返回的QuerySet集合。
+
+```python
+from books.models import User
+User.objects.all()
+<QuerySet [<User: User object (Tony)>]>
+User.objects.all() # 是查询所有数据。QuerySet
+```
+
++ 条件查询
+  User.objects.filter()方法返回QuerySet集合。
+  User.objects.get()方法返回是模型对象。
+
+  ```python
+  from books.models import User
+  User.objects.filter(name='Tony')
+  <QuerySet [<User: User object (Tony)>]>
+  User.objects.get(name='Tony')
+  <User: User object (Tony)>
+  ```
+
++ 插入数据
+
+  + 方法1：
+
+    ```python
+    User.objects.create() # 方法插入数据 
+    User.objects.create(name='关东升',password='123',birthday='1978-5-6')
+    <User: User object (关东升)>
+    ```
+
+  + 方法2：
+
+    ```python
+    # 创建模型对象，调用模型的save()方法实现。
+    user = User(name='Tom',password='123',birthday='1977-5-6')
+    user.save()
+    ```
+
++ 修改数据
+
+  ```python
+  # 先查找模型，修改模型字段，调用模型的save()方法实现。
+  u =  User.objects.get(name='Tony')
+  u.email = '125@qq.com'
+  u.save()
+  ```
+
++ 删除数据
+
+  ```python
+  # 先查找模型，调用delete()方法实现。
+  u =  User.objects.get(name='Tony')
+  u.delete()
+  ```
+
+### 数据操作：用户管理案例
+
++ 查询所有数据
+
+  ```python
+  def show_list(request):
+      # 查询所有数据
+      list = User.objects.all()
+      return render(request,"show_list.html",{"list":list})
+  ```
+
++ 插入数据
+
+  ```python
+  def register(request):
+      if request.method == "POST":
+          form = RegistrationForm(request.POST)
+          # 验证通过
+          if form.is_valid():
+              user = User()
+              user.name = form.cleaned_data["username"]
+              user.password = form.cleaned_data["password1"]
+              user.birthday = form.cleaned_data["birthday"]
+              user.email = form.cleaned_data["email"]
+              user.save()
+              return HttpResponseRedirect("/books/list/")
+      else:
+          form = RegistrationForm()
+      return render(request,"registration.html",{"form":form})
+  ```
+
++ 删除数据
+
+  ```python
+  def remove_user(request):
+      username = request.GET["username"]
+      u = User.objects.get(name=username)
+      u.delete()
+      return HttpResponseRedirect("/books/list/")
+  ```
+
+### Q查询
+
+```shell
+__exact 精确等于 like ‘aaa’
+__iexact 精确等于 忽略大小写 ilike ‘aaa’
+__contains 包含 like ‘%aaa%’
+__icontains 包含 忽略大小写 ilike ‘%aaa%’，但是对于sqlite来说，contains的作用效果等同于icontains。
+__gt 大于
+__gte 大于等于
+__lt 小于
+__lte 小于等于
+__in 存在于一个list范围内
+__startswith 以…开头
+__istartswith 以…开头 忽略大小写
+__endswith 以…结尾
+__iendswith 以…结尾，忽略大小写
+__range 在…范围内
+__year 日期字段的年份
+__month 日期字段的月份
+__day 日期字段的日
+__isnull=True/False
+```
+
+```python
+from django.db.models import Q
+# Q(name__startswith='What')
+u = User.objects.filter(name__startswith='What')
+```
+
+## 通用视图
+
+类基础视图（Class-based views）通常是继承django.views.View。
+Django还提供了通用视图类，通用视图类可以与数据库模型绑定，模板命名是固定的。如果使用得当可以大大简化开发过程。通用视图类主要分为：通用显示视图和通用编辑视图。
+
++ 通用显示视图
+  主要用于显示，包括：
+  列表视图：django.views.generic.ListView
+  详细视图：django.views.generic.DetailView
+   这两个视图与数据库模型绑定，而且模板命名是固定的。如果我们的数据模型是User，则模板命名：		user_list.html和user_detail.html，模板存放的位置：
+
+  > books/template/books/user_list.html
+
+### 列表视图
+
++ views.py
+
+  ```python
+  from django.views.generic import ListView
+  ...
+  class UserListView(ListView):
+      model = User
+      ordering = ['name']
+      queryset = User.objects.filter(name__contains='2')
+  ```
+
++ user_list.html
+
+  ```html
+  {% extends "base.html" %}
+  {% block title %}用户列表{% endblock %}
+  {% block header %}用户列表{% endblock %}
+  {% block body %}
+  <table width="60%" border="1" align="center">
+      <tbody>
+      <tr>
+          <th width="30%">用户名</th>
+          <th width="30%">邮箱</th>
+          <th>操作</th>
+      </tr>
+  
+      {% for row in user_list %}
+      <tr>
+          <td>{{ row.name }}</td>
+          <td>{{ row.email }}</td>
+          <td>
+              <a href="#">修改</a>
+              <a href="/books/del/?username={{ row.name }}">删除</a>
+          </td>
+      </tr>
+      {% endfor %}
+      </tbody>
+  </table>
+  {% endblock %}
+  ```
+
+### 详细视图
+
++ views.py
+
+  ```python
+  class UserDetailView(DetailView):
+      model = User
+  ```
+
++ urls.py
+
+  ```python
+  urlpatterns = [
+    path("detail/<str:pk>",views.UserDetailView.as_view(),name="detail_view")
+  ]
+  ```
+
++ html
+
+  ```html
+  <!doctype html>
+  {% load static %}
+  <html>
+  <head>
+  <meta charset="utf-8">
+  <title>图书管理系统-用户注册</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/book.css' %}">
+  </head>
+  
+  <body>
+  <!-- 页面头部信息 -->
+  <div id="header">
+      <img src="{% static 'images/book_img2.jpg' %}" width="20px" height="20px">
+      用户注册
+      <hr/>
+  </div>
+  
+  <!-- 页面内容信息 -->
+  
+    <div id="content">
+      <table width="40%" border="0">
+        <tbody>
+          <tr>
+            <td class="label">用户名:</td>
+            <td>{{ user.name }}</td>
+          </tr>
+          <tr>
+            <td class="label">密码:</td>
+            <td>{{ user.password }}</td>
+          </tr>
+          <tr>
+            <td class="label">邮箱:</td>
+            <td>{{ user.email }}</td>
+          </tr>
+          <tr>
+            <td class="label">出生日期:</td>
+            <td>{{ user.birthday|date:"Y-m-d" }}</td>
+          </tr>
+          <tr align="center">
+            <td colspan="2">
+              <input type="button" value="返回" onclick="window.history.go(-1)">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+  
+  <!-- 页面底部信息 -->
+  <div id="footer">
+    <hr/>
+    Copyright ©  2008-2018. All Rights Reserved 
+  </div>
+  
+  </body>
+  </html>
+  
+  ```
+
+### 分页视图
+
++ views.py
+
+  ```python
+  class UserListView(ListView):
+      model = User
+      ordering = ["name"]
+      paginate_by = 1  # 每页页数
+      # queryset = User.objects.filter(name__contains="tom")
+  ```
+
++ html
+
+  ```html
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  
+  <div align="right">
+  {% if is_paginated %}
+    <ul class="pagination">
+      {% if page_obj.has_previous %}
+        <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+      {% else %}
+        <li class="disabled"><span>&laquo;</span></li>
+      {% endif %}
+      {% for i in paginator.page_range %}
+        {% if page_obj.number == i %}
+          <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+        {% else %}
+          <li><a href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if page_obj.has_next %}
+        <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+      {% else %}
+        <li class="disabled"><span>&raquo;</span></li>
+      {% endif %}
+    </ul>
+  {% endif %}
+  </div>
+  ```
+
+### 编辑视图
+
+## 文件上传
 
 
 

@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>图书管理系统-{% block title %}{% endblock %}</title>
+<style type="text/css">
+    
+    #footer,#header {
+        text-align: center;
+    }
+
+    td.label {
+        text-align: right;
+    }
+
+</style>
+</head>
+
+<body>
+<!-- 页面头部信息 -->
+<div id="header">
+    {% block header %}{% endblock %}
+    <hr/>
+</div>
+<!-- 页面内容信息 -->
+<div id="content">
+    {% block body %}
+    {% endblock %}
+</div>
+<!-- 页面底部信息 -->
+<div id="footer">
+  <hr/>
+  Copyright © 智捷课堂 2008-2018. All Rights Reserved 
+</div>
+
+</body>
+</html>

@@ -1,10 +1,12 @@
 from django.shortcuts import render,HttpResponseRedirect
 from django.http import HttpResponse
 from django.views import View
-from django.views.generic import RedirectView,TemplateView
+from django.views.generic import RedirectView,TemplateView,ListView,DetailView
+from django.views.generic.edit import FormView,DeleteView
 import datetime
 from .forms import RegistrationForm
-
+from .models import User
+from django.urls import reverse_lazy
 
 # Create your views here.
 def login(request):
@@ -13,11 +15,61 @@ def login(request):
 def register(request):
     if request.method == "POST":
         form = RegistrationForm(request.POST)
+        # 验证通过
         if form.is_valid():
-            return HttpResponseRedirect("/books/login/")
+            user = User()
+            user.name = form.cleaned_data["username"]
+            user.password = form.cleaned_data["password1"]
+            user.birthday = form.cleaned_data["birthday"]
+            user.email = form.cleaned_data["email"]
+            user.save()
+            return HttpResponseRedirect("/books/list/")
     else:
         form = RegistrationForm()
     return render(request,"registration.html",{"form":form})
+
+def show_list(request):
+    # 查询所有数据
+    list = User.objects.all()
+    return render(request,"show_list.html",{"list":list})
+
+def remove_user(request):
+    username = request.GET["username"]
+    u = User.objects.get(name=username)
+    u.delete()
+    return HttpResponseRedirect("/books/list/")
+
+
+class UserListView(ListView):
+    model = User
+    ordering = ["name"]
+    paginate_by = 1
+    # queryset = User.objects.filter(name__contains="tom")
+
+
+class UserDetailView(DetailView):
+    model = User
+
+
+class RegisrationFormView(FormView):
+    template_name = "registration.html"
+    form_class = RegistrationForm
+    success_url = "/books/list/"
+    def form_valid(self, form):
+        user = User()
+        user.name = form.cleaned_data["username"]
+        user.password = form.cleaned_data["password1"]
+        user.birthday = form.cleaned_data["birthday"]
+        user.email = form.cleaned_data["email"]
+        user.save()
+        
+        return super().form_valid(form)
+
+
+class UserDeleteView(DeleteView):
+    model = User
+    success_url = reverse_lazy("userList")
+
 # def show_book_info1(request):
 #     context = {"book_name":"abc","author":"123"}
 #     return render(request,"book.html",context)

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}用户列表{% endblock %}
+{% block header %}用户列表{% endblock %}
+{% block body %}
+<table width="60%" border="1" align="center">
+    <tbody>
+    <tr>
+        <th width="30%">用户名</th>
+        <th width="30%">邮箱</th>
+        <th>操作</th>
+    </tr>
+
+    {% for row in list %}
+    <tr>
+        <td>{{ row.name }}</td>
+        <td>{{ row.email }}</td>
+        <td>
+            <a href="#">修改</a>
+            <a href="/books/del/?username={{ row.name }}">删除</a>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
