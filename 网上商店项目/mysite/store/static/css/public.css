@@ -1,0 +1,77 @@
+div.header {
+    text-align: center;
+    font-size: 1.5em;
+    padding-top: 1.0em;
+    padding-bottom: 1.0em;
+    background-color: #E8E8E8;
+    border: solid 1px;
+}
+
+a:link {
+    font-size: 14px;
+    color: #333333;
+    text-decoration: none;
+}
+
+a:visited {
+    color: #333333;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #0066CC;
+}
+
+div.footer {
+    text-align: center;
+}
+
+.text1 {
+    text-indent: 20px;
+}
+
+.text2 {
+    font-size: 14px;
+    color: #000000;
+    text-indent: 60px;
+}
+
+.text3 {
+	color: #335182;
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.text4 {
+	font-size: 16px;
+	font-weight: bolder;
+	color: #333333;
+}
+.text4 {
+}
+
+
+/*商品详细商品详细文字*/
+.text5 {
+    border-bottom: 1px dashed #666666;
+    text-align: right;
+}
+
+/*商品详细商品详细文字*/
+.text6 {
+    border-bottom: 1px dashed #666666;
+}
+
+.text7 {
+	font-size: 18px;
+	font-weight: bolder;
+	color: #335182;
+}
+
+.error {
+    color: red;
+}
+
+.success {
+    color: green;
+}

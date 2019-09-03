@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>购物车</title>
+    <link rel="stylesheet" type="text/css" href="css/public.css">
+    <style type="text/css">
+       table {
+            border-collapse: collapse;
+        }
+
+        .threeboder {
+            border: 1px solid #5B96D0;
+        }
+
+        .trow {
+            border-right: 1px solid #5B96D0;
+            border-bottom: 1px solid #5A96D6;
+        }
+
+        .theader {
+            background-color: #A5D3FF;
+            font-size: 14px;
+            border-right: 1px solid #5B96D0;
+            border-bottom: 1px solid #5A96D6;
+        }
+    </style>
+
+   <script>
+        function calc(rowid, quantityInput) {
+
+            quantity = quantityInput.value
+            if (isNaN(quantity)) {
+                alert("不是有效的数值！");
+                quantityInput.value = 0;
+                quantity = quantityInput.value
+                quantityInput.focus();
+                // return;
+            }
+            // 单价id
+            var price_id = 'price_' + rowid;
+            // 单价
+            var price = parseFloat(document.getElementById(price_id).innerText);
+
+            // 小计id
+            var subtotal_id = 'subtotal_' + rowid;
+            // 小计(更新之前)
+            subtotal1 = parseFloat(document.getElementById(subtotal_id).innerText);
+            //四舍五入并保留两位小数
+            subtotal1 = subtotal1.toFixed(2);
+            document.getElementById(subtotal_id).innerText = quantity * price;
+            // 小计(更新之后)
+            subtotal2 = parseFloat(document.getElementById(subtotal_id).innerText);
+            // 合计
+            total = parseFloat(document.getElementById('total').innerText);
+            // 计算合计
+            total = total - subtotal1 + subtotal2;
+            //四舍五入并保留两位小数
+            total = total.toFixed(2);
+            //更新合计
+            document.getElementById('total').innerText = total;
+
+        }
+    </script>
+
+</head>
+
+<body>
+<table width="100%" border="0" align="center">
+    <tr>
+        <td width="616"><img src="images/mycar.jpg"  /></td>
+        <td width="734" align="right"><img src="images/mycar1.jpg" align="absmiddle" /> <a href="Cart.html">&nbsp;购物车</a>
+            | <a href="zhanghu.html">我的帐户</a> | <a href="Catalog.html">商品列表</a></td>
+    </tr>
+</table>
+<hr width="100%"/>
+<div class="text3" align="center">您选好的商品</div>
+<br>
+<table width="100%" border="0" align="center" class="threeboder">
+    <tr bgcolor="#A5D3FF">
+        <td height="50" align="center" class="theader">商品名称</td>
+        <td width="8%" align="center" class="theader">数量</td>
+        <td width="15%" align="center" class="theader">单价</td>
+        <td width="15%" align="center" class="theader">小计</td>
+    </tr>
+    <tr>
+        <td height="50" align="left" class="trow">&nbsp;&nbsp;戴尔(DELL)成就3470高性能商用办公台式电脑整机</td>
+        <td align="center" class="trow">
+            <input name="quantity_1" type="text" value="1" onblur="calc(1, this)"/>
+        </td>
+        <td align="center" class="trow">&yen;<span id="price_1">699.99</span></td>
+        <td align="center" class="trow">&yen;<span id="subtotal_1">699.99</span>
+        </td>
+    </tr>
+    <tr>
+        <td height="50" align="left" class="trow">&nbsp;&nbsp;戴尔(DELL)成就3470高性能商用办公台式电脑整机</td>
+        <td align="center" class="trow">
+            <input name="quantity_2" type="text" value="1" class="textfield" onblur="calc(2, this)"/>
+        </td>
+        <td align="center" class="trow">&yen;<span id="price_2">699.99</span></td>
+        <td align="center" class="trow">&yen;<span id="subtotal_2">699.99</span>
+        </td>
+    </tr>
+    <tr>
+        <td height="50" colspan="5" align="right">合计：&yen;<span id="total">1399.98</span>&nbsp;&nbsp;</td>
+    </tr>
+</table>
+<br>
+<div align="center">
+    <a href="#"><img src="images/submit_order.jpg" border="0"/></a>&nbsp;&nbsp;
+</div>
+<div class="footer">
+    <hr width="100%"/>
+    Copyright © 智捷课堂 2008-2018. All Rights Reserved
+</div>
+</body>
+</html>
