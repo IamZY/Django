@@ -1,10 +1,10 @@
-<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>客户注册</title>
-<link rel="stylesheet" type="text/css" href="css/public.css">
-    <style type="text/css">
+{% extends "base2.html" %}
+{% load static %}
+{% block title %}客户注册{% endblock %}
+
+{% block body %}
+
+<style type="text/css">
         table {
             border-collapse: collapse;
         }
@@ -35,52 +35,64 @@
             font-size: medium;
             line-height: 50px;
         }
-    </style>
-</head>
 
-<body>
-<div><img src="images/reg.jpg" align="absmiddle" /></div>
-<br>
-<hr width="100%" />
-<div class="text3" align="center">请填写下列信息</div>
-<br>
-<table width="60%" border="0" align="center" class="boder">
-  <tr>
-    <td width="35%" height="27" class="col1">客户账号：</td>
-    <td class="col2"><input type="text" name="userid" />*</td>
-  </tr>
-  <tr>
-    <td height="27" class="col1">客户姓名：</td>
-    <td class="col2"><input type="text" name="name" />*</td>
-  </tr>
-  <tr>
-    <td height="27" class="col1">客户密码：</td>
-    <td class="col2"><input type="password" name="password" />*</td>
-  </tr>
-  <tr>
-    <td height="27" class="col1">再次输入密码：</td>
-    <td class="col2"><input type="password" name="password2" />*</td>
-  </tr>
-  <tr>
-    <td height="27" class="col1">出生日期：</td>
-    <td  class="col2"><input type="text" name="birthday" />*
-      格式（YYYY-MM-DD）</td>
-  </tr>
-  <tr>
-    <td height="27" class="col1">通讯地址：</td>
-    <td class="col2"><input type="text" name="address"  /></td>
-  </tr>
-  <tr>
-    <td height="27" class="col1">电话号码：</td>
-    <td class="col2"><input type="text" name="phone"   /></td>
-  </tr>
-</table>
-<br>
-<div align="center">
-  <input type="image" src="images/submit_button.jpg" />
-</div>
-<div class="footer">
-  <hr  width="100%" />
-  Copyright © 智捷课堂 2008-2018. All Rights Reserved </div>
-</body>
-</html>
+
+</style>
+
+<form action="/register/" method="post">
+    {% csrf_token %}
+    <div><img src="{% static 'images/reg.jpg' %}" align="absmiddle"/></div>
+    <br>
+    <hr width="100%"/>
+
+    <ul>
+        {% for field, errors in form.errors.items %}
+        {% for message in errors %}
+        <li class="error">{{ message }}</li>
+        {% endfor %}
+        {% endfor %}
+    </ul>
+
+
+    <div class="text3" align="center">请填写下列信息</div>
+    <br>
+
+    <table width="60%" border="0" align="center" class="boder">
+        <tr>
+            <td width="35%" height="27" class="col1">客户账号：</td>
+            <td class="col2">{{ form.userid }}*</td>
+        </tr>
+        <tr>
+            <td height="27" class="col1">客户姓名：</td>
+            <td class="col2">{{ form.name }}*</td>
+        </tr>
+        <tr>
+            <td height="27" class="col1">客户密码：</td>
+            <td class="col2">{{ form.password1 }}*</td>
+        </tr>
+        <tr>
+            <td height="27" class="col1">再次输入密码：</td>
+            <td class="col2">{{ form.password2 }}*</td>
+        </tr>
+        <tr>
+            <td height="27" class="col1">出生日期：</td>
+            <td class="col2">{{ form.birthday }}*
+                格式（YYYY-MM-DD）
+            </td>
+        </tr>
+        <tr>
+            <td height="27" class="col1">通讯地址：</td>
+            <td class="col2">{{ form.address }}</td>
+        </tr>
+        <tr>
+            <td height="27" class="col1">电话号码：</td>
+            <td class="col2">{{ form.phone }}</td>
+        </tr>
+    </table>
+    <br>
+    <div align="center">
+        <input type="image" src="{% static 'images/submit_button.jpg' %}"/>
+    </div>
+</form>
+
+{% endblock %}

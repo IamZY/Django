@@ -1,0 +1,18 @@
+<!doctype html>
+{% load static %}
+<html>
+<head>
+<meta charset="utf-8">
+<title>{% block title %}{% endblock %}</title>
+<link rel="stylesheet" type="text/css" href="{% static 'css/public.css' %}">
+</head>
+
+<body>
+<div class="header">智捷网上电脑商城</div>
+<hr width="100%" />
+{% block body %}{% endblock %}
+<div class="footer">
+  <hr  width="100%" />
+  Copyright © 智捷课堂 2008-2018. All Rights Reserved </div>
+</body>
+</html>

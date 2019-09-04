@@ -697,8 +697,8 @@ class Meta:
 + 同步数据库
   模型修改之后，需要执行如下指令：
 
-  > python manger.py makemigrations 
-  > python manager.py migrate
+  > python manage.py makemigrations 
+  > python manage.py migrate
   > makemigrations：负责生成数据库迁移计划，生成迁移执行文件。
   > migrate：负责执行或取消数据库迁移。
 
