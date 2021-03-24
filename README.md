@@ -20,8 +20,48 @@ django-admin startprotect myproject
 ## 创建应用程序
 
 ```shell
-python manage.py startapp books
+django-admin startapp Job
+或者
+python manage.py startapp Job
 ```
+
+需要在`settings.py`中添加`import os`
+
++ 注意点
+
+  光修改migration中的py是无法修改表数据的同时需要删除数据库中django_migrations中的表数据,不然不生效
+
+## 创建模型
+
+在项目下model.py
+
+```python
+from django.db import models
+
+# Create your models here.
+class Job(models.Model):
+    jid = models.AutoField(primary_key=True)
+    businessName = models.CharField(max_length=255)
+    location = models.CharField(max_length=255)
+    jobName = models.CharField(max_length=255)
+    businessYear = models.CharField(max_length=255)
+    education = models.CharField(max_length=255)
+    businessType = models.CharField(max_length=255)
+    money = models.CharField(max_length=255)
+    pubTime = models.CharField(max_length=255)
+    url = models.CharField(max_length=255)
+    class Meta:
+        db_table = 'Job'
+        ordering = ['jid']
+```
+
++ 控制台 manage.py同级下
+
+  > python manage.py makemigrations
+  >
+  > python manage.py migrate
+  >
+  > 每次数据更新都需要进行操作
 
 ## 视图
 
