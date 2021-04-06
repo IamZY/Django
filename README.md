@@ -1106,7 +1106,27 @@ Django还提供了通用视图类，通用视图类可以与数据库模型绑�
 
 ## 发送邮件
 
+## 打印SQL语句
 
+```python
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console':{
+            'level':'DEBUG',
+            'class':'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'handlers': ['console'],
+            'propagate': True,
+            'level':'DEBUG',
+        },
+    }
+}
+```
 
 
 
